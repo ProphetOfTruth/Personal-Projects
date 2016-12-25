@@ -9,8 +9,9 @@ sense = SenseHat()
 pygame.init()
 pygame.display.set_mode((50,50))
 running = True
+EggRun = False
 def reset():
-    global AA,BA,CA,AB,BB,CB,AC,BC,CC,MouseX,MouseY,Player
+    global AA,BA,CA,AB,BB,CB,AC,BC,CC,MouseX,MouseY,Player,Direction,Egg1,Egg2,Egg3
     AA = 0
     BA = 0
     CA = 0
@@ -23,6 +24,10 @@ def reset():
     MouseX = 1
     MouseY = 1
     Player = 1
+    Direction = 2
+    Egg1 = 1
+    Egg2 = 0
+    Egg3 = 0
 def AllOn(R,G,B):
     X = (R,G,B)
     AllOn=[
@@ -135,8 +140,24 @@ def Sweep(Tf):
         Y = Y+1
     if(Tf):
         reset()
+def MoveUp():
+    global MouseX,MouseY,Player,Direction
+    Direction = 1
+    Continue = True
+    while(Continue == True):
+        MouseY = MouseY-1
+        if(MouseY < 0):
+            MouseY = 3
+            MouseX = MouseX-1
+            if(MouseX < 0):
+                MouseX = 3
+        if(Translate(MouseX,MouseY)):
+            Continue = True
+        if(Translate(MouseX,MouseY) == 0):
+            Continue = False
 def MoveRight():
-    global MouseX,MouseY,Player
+    global MouseX,MouseY,Player,Direction
+    Direction = 2
     Continue = True
     while(Continue == True):
         MouseX = MouseX+1
@@ -145,6 +166,36 @@ def MoveRight():
             MouseY = MouseY+1
             if(MouseY >= 3):
                 MouseY = 0
+        if(Translate(MouseX,MouseY)):
+            Continue = True
+        if(Translate(MouseX,MouseY) == 0):
+            Continue = False
+def MoveDown():
+    global MouseX,MouseY,Player,Direction
+    Direction = 3
+    Continue = True
+    while(Continue == True):
+        MouseY = MouseY+1
+        if(MouseY >= 3):
+            MouseY = 0
+            MouseX = MouseX+1
+            if(MouseX >= 3):
+                MouseX = 0
+        if(Translate(MouseX,MouseY)):
+            Continue = True
+        if(Translate(MouseX,MouseY) == 0):
+            Continue = False
+def MoveLeft():
+    global MouseX,MouseY,Player,Direction
+    Direction = 4
+    Continue = True
+    while(Continue == True):
+        MouseX = MouseX-1
+        if(MouseX < 0):
+            MouseX = 3
+            MouseY = MouseY-1
+            if(MouseY < 0):
+                MouseY = 3
         if(Translate(MouseX,MouseY)):
             Continue = True
         if(Translate(MouseX,MouseY) == 0):
@@ -173,31 +224,38 @@ def Translate(X,Y):
         if(Y == 2):
             return(CC)
 def SetPlace():
-    global MouseX,MouseY,Player,AA,BA,CA,AB,BB,CB,AC,BC,CC
+    global MouseX,MouseY,Player,AA,BA,CA,AB,BB,CB,AC,BC,CC,Direction
     Select(MouseX,MouseY,Player,False)
     Ran = False
     if(MouseX == 0):
         if(MouseY == 0):
-            AA = 1
+            AA = Player
         if(MouseY == 1):
-            AB = 1
+            AB = Player
         if(MouseY == 2):
-            AC = 1
+            AC = Player
     if(MouseX == 1):
         if(MouseY == 0):
-            BA = 1
+            BA = Player
         if(MouseY == 1):
-            BB = 1
+            BB = Player
         if(MouseY == 2):
-            BC = 1
+            BC = Player
     if(MouseX == 2):
         if(MouseY == 0):
-            CA = 1
+            CA = Player
         if(MouseY == 1):
-            CB = 1
+            CB = Player
         if(MouseY == 2):
-            CC = 1
-    MoveRight()
+            CC = Player
+    if(Direction == 1):
+        MoveUp()
+    if(Direction == 2):
+        MoveRight()
+    if(Direction == 3):
+        MoveDown()
+    if(Direction == 4):
+        MoveLeft()            
     if(Player == 1):
         if(Ran == False):
             Player = 3
@@ -206,9 +264,38 @@ def SetPlace():
         if(Ran == False):
             Player = 1
             Ran = True
-def GameOver():
+def GameOver(Winner):
           sleep(10)
           Sweep(True)
+def Egg():
+    global EggRun,Egg1,Egg2,Egg3,Direction,Player
+    if(EggRun == False):
+        if(((Egg3 == 1) == (Egg2 == 3) == (Egg1 == 4) == (Direction == 2) == True)):
+           Sweep(False)
+           AllOff()
+           A = 255
+           while(A >= 0):
+               AllOn(A,A,A)
+               A = A-1
+           if(Player == 1):
+               sense.show_message("Made by FurryKitten",scroll_speed=0.05,text_colour=[255,0,0],back_colour=[0,0,0])
+           if(Player == 3):
+               sense.show_message("Made by FurryKitten",scroll_speed=0.05,text_colour=[0,0,255],back_colour=[0,0,0])               
+           EggRun = True
+           Bars()
+           Repair()
+    Egg3 = Egg2
+    Egg2 = Egg1
+    Egg1 = Direction
+def Repair():
+    A = 0
+    B = 0
+    while(B <= 3):
+        while(A <=3):
+            Select(A,B,Translate(A,B),False)
+            A = A+1
+        B = B+1
+        A = 0
 AllOn(255,255,255)
 sleep(1)
 A = 255
@@ -248,7 +335,17 @@ while(running == True):
             if(event.key == K_RIGHT):
                 print("Right")
                 MoveRight()
+            if(event.key == K_UP):
+                print("Up")
+                MoveUp()
+            if(event.key == K_LEFT):
+                print("Left")
+                MoveLeft()
+            if(event.key == K_DOWN):
+                print("Down")
+                MoveDown()
             if(event.key == K_RETURN):
                 print("Return")
                 SetPlace()
+            Egg()
     MouseBlink()
