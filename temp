@@ -1,0 +1,136 @@
+import random, sense_hat, time
+from time import sleep
+import pygame
+from pygame.locals import *
+running = True
+pygame.init()
+white = (255, 255, 255)
+nothing = (0, 0, 0)
+
+def one():
+  W = white
+  N = nothing
+  logo = [
+    N, N, N, N, N, N, N, N,
+    N, N, N, N, N, N, N, N,
+    N, N, N, N, N, N, N, N,
+    N, N, N, W, W, N, N, N,
+    N, N, N, W, W, N, N, N,
+    N, N, N, N, N, N, N, N,
+    N, N, N, N, N, N, N, N,
+    N, N, N, N, N, N, N, N,]
+  return logo
+  
+def two():
+  W = white
+  N = nothing
+  logo = [
+    N, N, N, N, N, N, N, N,
+    N, N, N, W, W, N, N, N,
+    N, N, N, W, W, N, N, N,
+    N, N, N, N, N, N, N, N,
+    N, N, N, N, N, N, N, N,
+    N, N, N, W, W, N, N, N,
+    N, N, N, W, W, N, N, N,
+    N, N, N, N, N, N, N, N,]
+  return logo
+  
+def three():
+  W = white
+  N = nothing
+  logo = [
+    N, N, N, N, N, N, N, N,
+    N, W, W, N, N, N, N, N,
+    N, W, W, N, N, N, N, N,
+    N, N, N, W, W, N, N, N,
+    N, N, N, W, W, N, N, N,
+    N, N, N, N, N, W, W, N,
+    N, N, N, N, N, W, W, N,
+    N, N, N, N, N, N, N, N,]
+  return logo
+  
+def four():
+  W = white
+  N = nothing
+  logo = [
+    N, N, N, N, N, N, N, N,
+    N, W, W, N, N, W, W, N,
+    N, W, W, N, N, W, W, N,
+    N, N, N, N, N, N, N, N,
+    N, N, N, N, N, N, N, N,
+    N, W, W, N, N, W, W, N,
+    N, W, W, N, N, W, W, N,
+    N, N, N, N, N, N, N, N,]
+  return logo
+  
+def five():
+  W = white
+  N = nothing
+  logo = [
+    N, N, N, N, N, N, N, N,
+    N, W, W, N, N, W, W, N,
+    N, W, W, N, N, W, W, N,
+    N, N, N, W, W, N, N, N,
+    N, N, N, W, W, N, N, N,
+    N, W, W, N, N, W, W, N,
+    N, W, W, N, N, W, W, N,
+    N, N, N, N, N, N, N, N,
+    ]
+  return logo
+  
+def six():
+  W = white
+  N = nothing
+  logo = [
+    N, W, W, N, N, W, W, N,
+    N, W, W, N, N, W, W, N,
+    N, N, N, N, N, N, N, N,
+    N, W, W, N, N, W, W, N,
+    N, W, W, N, N, W, W, N,
+    N, N, N, N, N, N, N, N,
+    N, W, W, N, N, W, W, N,
+    N, W, W, N, N, W, W, N,
+    ]
+  return logo
+  
+def AllOn(R,G,B):
+    X = (R,G,B)
+    AllOn=[
+      X, X, X, X, X, X, X, X, 
+      X, X, X, X, X, X, X, X,
+      X, X, X, X, X, X, X, X,
+      X, X, X, X, X, X, X, X,
+      X, X, X, X, X, X, X, X,
+      X, X, X, X, X, X, X, X,
+      X, X, X, X, X, X, X, X,
+      X, X, X, X, X, X, X, X,
+      ]
+    SenseHat.set_pixels(AllOn)
+
+move = [one, two, three, four, five, six]
+
+def roll():
+  return random.move(0, 5)
+  
+running = True
+while(running == True):
+    for event in pygame.event.get():
+        print(event)
+        if(event.type == QUIT):
+            running = False
+            print("BYE")
+        if(event.type == KEYDOWN):
+            if(event.key == K_RIGHT):
+                print("Right")
+                AllOn(255,255,255)
+            if(event.key == K_UP):
+                print("Up")
+                
+            if(event.key == K_LEFT):
+                print("Left")
+                
+            if(event.key == K_DOWN):
+                print("Down")
+                
+            if(event.key == K_RETURN):
+                print("Return")
